@@ -89,7 +89,7 @@ function scheduleBlogGeneration() {
     }
 
     topicIndex = (topicIndex + 1) % blogIdeas.length;
-  }, 1 * 60 * 1000); // 5 minutes interval
+  }, 20 * 60 * 1000); // 5 minutes interval
 }
 
 // API Routes
