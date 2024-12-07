@@ -14,7 +14,7 @@ const Blog = mongoose.model('Blog', blogSchema);
 
 // Blog Ideas
 const blogIdeas = require('./blogs') // Import the blogs array from blogs.js
-console.log(blogIdeas)
+// console.log(blogIdeas)
 
 // Initialize Express
 const app = express();
@@ -96,7 +96,7 @@ function scheduleBlogGeneration() {
     } catch (error) {
       console.error(`Error while processing topic "${unusedTopic}":`, error);
     }
-  }, 1 * 60 * 1000); // 1 hour interval
+  }, 5 * 60 * 1000); // 1 hour interval
 }
 
 // API Routes
