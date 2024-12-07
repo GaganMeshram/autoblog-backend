@@ -292,7 +292,7 @@ function scheduleBlogGeneration() {
     } catch (error) {
       console.error(`Error while processing topic "${unusedTopic}":`, error);
     }
-  }, 1 * 60 * 1000); // 5 minutes interval
+  }, 60 * 60 * 1000); // 5 minutes interval
 }
 
 // API Routes
