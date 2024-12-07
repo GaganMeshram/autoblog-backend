@@ -237,7 +237,7 @@ app.use(express.json());
 
 // MongoDB Connection
 mongoose
-  .connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.log(err));
 
@@ -292,7 +292,7 @@ function scheduleBlogGeneration() {
     } catch (error) {
       console.error(`Error while processing topic "${unusedTopic}":`, error);
     }
-  }, 60 * 60 * 1000); // 5 minutes interval
+  }, 3600000); // 1 hour interval
 }
 
 // API Routes
@@ -317,6 +317,38 @@ app.get('/api/posts/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch post' });
   }
 });
+
+app.get('/api/posts/search', async (req, res) => {
+  const query = req.query.query;
+
+  if (!query) {
+    return res.status(400).json({ error: 'Query parameter is required' });
+  }
+
+  try {
+    // Search posts where title or content matches the query (case-insensitive)
+    const posts = await Blog.find({
+      $or: [
+        { title: { $regex: query, $options: 'i' } }, // 'i' makes the search case-insensitive
+        { content: { $regex: query, $options: 'i' } }
+      ]
+    });
+    
+    if (posts.length === 0) {
+      return res.status(404).json({ message: 'No posts found matching your search query' });
+    }
+    
+    res.json(posts); // Return the filtered posts
+  } catch (error) {
+    console.error('Error occurred during search:', error);
+    res.status(500).json({ error: 'Failed to search posts' });
+  }
+});
+
+
+
+
+
 
 app.post('/api/posts', async (req, res) => {
   try {
